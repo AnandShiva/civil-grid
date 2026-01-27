@@ -22,4 +22,4 @@ Your task is to build a tool that enables the city manager to view the areas whe
 ## Next steps
 
 - Push the code to a private GitHub repo and invite [Sharath](https://github.com/sharathprabhal)
-- Setup time [here](https://calendar.app.google/ZJAunfJW9Fs8fqT27) to walk us through the project. Please give us atleast 24 hours to review the code before the walkthrough
+- Setup time [here](https://calendar.app.google/n33Q2Qm5yy3sjbhh8) to walk us through the project. Please give us atleast 24 hours to review the code before the walkthrough
