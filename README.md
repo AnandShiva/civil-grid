@@ -1,7 +1,3 @@
-# Software Engineer Interview Assessment
-
-Thanks for taking the time to interview at CivilGrid, we appreciate it! The following assessment is meant to test your technical, UI/UX, product thinking, and decision making skills.
-
 ## Prompt
 
 You have been hired by the City of Los Angeles to build a web application to find project synergies between the city's various departments. One such opportunity is increasing capacity at existing EV chargers within the city as they are undertaking other capital improvements.
