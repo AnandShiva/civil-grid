@@ -17,5 +17,34 @@ Your task is to build a tool that enables the city manager to view the areas whe
 
 ## Next steps
 
-- Push the code to a private GitHub repo and invite [Sharath](https://github.com/sharathprabhal)
-- Setup time [here](https://calendar.app.google/n33Q2Qm5yy3sjbhh8) to walk us through the project.
+## Civil Grid Implementation
+
+This project visualizes Capital Improvement Projects (CIP) and EV Chargers in Los Angeles to identify synergies.
+
+### Features
+- **Interactive Map**: Displays CIP Projects (Blue polygons) and EV Chargers (Green points).
+- **Search**: Filter projects by title or number, and chargers by ID.
+- **Details Sidebar**: View comprehensive details for selected features.
+- **Responsive Layout**: Sidebar + Map view.
+
+### Tech Stack
+- React + TypeScript (Vite)
+- Leaflet + React-Leaflet
+- Tailwind CSS
+
+### How to Run
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start development server:
+   ```bash
+   npm run dev
+   ```
+3. Build for production:
+   ```bash
+   npm run build
+   ```
+
+### Deployment
+The `dist` folder created by `npm run build` can be deployed to any static host (Netlify, Render, Vercel).
