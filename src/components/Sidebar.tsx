@@ -1,13 +1,16 @@
-import type { SelectedFeature, CipProjectProperties, EvChargerProperties } from '../types';
+import type { SelectedFeature, CipProjectProperties, EvChargerProperties, SpatialCorrelations } from '../types';
 
 interface SidebarProps {
     selectedFeature: SelectedFeature | null;
+    correlations?: SpatialCorrelations;
+    projects?: any[];
+    chargers?: any[];
+    onSelectFeature?: (feature: SelectedFeature | null) => void;
 }
 
-export default function Sidebar({ selectedFeature }: SidebarProps) {
+export default function Sidebar({ selectedFeature, correlations, projects, chargers, onSelectFeature }: SidebarProps) {
     return (
         <div className="h-full flex flex-col bg-white">
-
             <div className="flex-1 overflow-y-auto p-4">
                 {!selectedFeature ? (
                     <div className="text-center mt-20 px-6">
@@ -21,18 +24,34 @@ export default function Sidebar({ selectedFeature }: SidebarProps) {
                         <p className="text-slate-500 text-sm mt-1">Select a project or EV charger map marker to view details.</p>
                     </div>
                 ) : (
-                    <FeatureDetails feature={selectedFeature} />
+                    <FeatureDetails
+                        feature={selectedFeature}
+                        correlations={correlations}
+                        projects={projects}
+                        chargers={chargers}
+                        onSelectFeature={onSelectFeature}
+                    />
                 )}
             </div>
         </div>
     );
 }
 
-function FeatureDetails({ feature }: { feature: SelectedFeature }) {
+interface FeatureDetailsProps {
+    feature: SelectedFeature;
+    correlations?: SpatialCorrelations;
+    projects?: any[];
+    chargers?: any[];
+    onSelectFeature?: (feature: SelectedFeature | null) => void;
+}
+
+function FeatureDetails({ feature, correlations, projects, chargers, onSelectFeature }: FeatureDetailsProps) {
     const { type, properties } = feature;
 
     if (type === 'project') {
         const props = properties as CipProjectProperties;
+        const linkedChargerIds = correlations?.projectToChargers[props.OBJECTID] || [];
+
         return (
             <div className="space-y-6">
                 <div>
@@ -43,6 +62,33 @@ function FeatureDetails({ feature }: { feature: SelectedFeature }) {
                         {props.ProjectTitle}
                     </h2>
                 </div>
+
+                {linkedChargerIds.length > 0 && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <h3 className="text-sm font-bold text-green-800 mb-2 flex items-center">
+                            <span className="mr-1">⚡</span> Nested Chargers Presents!
+                        </h3>
+                        <p className="text-xs text-green-700 mb-2">
+                            {linkedChargerIds.length} charger(s) located within this project area.
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            {linkedChargerIds.map(id => (
+                                <button
+                                    key={id}
+                                    onClick={() => {
+                                        const charger = chargers?.find(c => c.properties.OBJECTID === id);
+                                        if (charger && onSelectFeature) {
+                                            onSelectFeature({ type: 'charger', properties: charger.properties });
+                                        }
+                                    }}
+                                    className="px-2 py-1 bg-white border border-green-300 rounded text-xs text-green-700 hover:bg-green-100 transition-colors"
+                                >
+                                    Charger #{id}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 <DetailItem label="Program" value={props.ProgramName} />
                 <DetailItem label="Phase" value={props.ProjectPhase} />
@@ -85,6 +131,8 @@ function FeatureDetails({ feature }: { feature: SelectedFeature }) {
         );
     } else {
         const props = properties as EvChargerProperties;
+        const linkedProjectIds = correlations?.chargerToProjects[props.OBJECTID] || [];
+
         return (
             <div className="space-y-6">
                 <div>
@@ -97,10 +145,35 @@ function FeatureDetails({ feature }: { feature: SelectedFeature }) {
                     <p className="text-slate-500 text-sm">ID: {props.OBJECTID}</p>
                 </div>
 
-                {/* Add specific charger props if available in the JSON, e.g. location, type, etc. 
-                    Based on the file view earlier, mostly nulls or just OBJECTID and geometry were visible.
-                    I'll add placeholders if needed or show available keys.
-                */}
+                {linkedProjectIds.length > 0 && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <h3 className="text-sm font-bold text-blue-800 mb-2 flex items-center">
+                            <span className="mr-1">🚧</span> Coordination Opportunity
+                        </h3>
+                        <p className="text-xs text-blue-700 mb-2">
+                            This charger is located within {linkedProjectIds.length} planned project(s).
+                        </p>
+                        <div className="flex flex-col gap-2">
+                            {linkedProjectIds.map(id => {
+                                const project = projects?.find(p => p.properties.OBJECTID === id);
+                                return (
+                                    <button
+                                        key={id}
+                                        onClick={() => {
+                                            if (project && onSelectFeature) {
+                                                onSelectFeature({ type: 'project', properties: project.properties });
+                                            }
+                                        }}
+                                        className="text-left px-2 py-1.5 bg-white border border-blue-300 rounded text-xs text-blue-700 hover:bg-blue-100 transition-colors truncate w-full"
+                                    >
+                                        {project?.properties.ProjectTitle || `Project #${id}`}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+
                 <div className="bg-slate-50 p-3 rounded text-sm text-slate-600">
                     <p>Charger details are limited in this dataset.</p>
                 </div>

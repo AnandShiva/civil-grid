@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import MapView from './components/Map';
 import Sidebar from './components/Sidebar';
 import SearchBar from './components/SearchBar';
 import type { SelectedFeature } from './types';
 import evChargersData from './data/ev_chargers.json';
 import cipProjectsData from './data/cip_projects.json';
+import { findProjectChargerCorrelations } from './utils/spatial';
 
 // Type assertion for raw JSON data
 const chargers = (evChargersData as any).features;
@@ -12,6 +13,11 @@ const projects = (cipProjectsData as any).features;
 
 function App() {
   const [selectedFeature, setSelectedFeature] = useState<SelectedFeature | null>(null);
+
+  // Calculate correlations once on load
+  const correlations = useMemo(() => {
+    return findProjectChargerCorrelations(projects, chargers);
+  }, []);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-gray-100">
@@ -26,7 +32,13 @@ function App() {
           />
         </div>
         <div className="flex-1 overflow-hidden">
-          <Sidebar selectedFeature={selectedFeature} />
+          <Sidebar
+            selectedFeature={selectedFeature}
+            correlations={correlations}
+            projects={projects}
+            chargers={chargers}
+            onSelectFeature={setSelectedFeature}
+          />
         </div>
       </div>
 

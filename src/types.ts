@@ -24,3 +24,10 @@ export interface SelectedFeature {
     type: FeatureType;
     properties: EvChargerProperties | CipProjectProperties;
 }
+
+export interface SpatialCorrelations {
+    // Map of project ID -> array of charger IDs inside it
+    projectToChargers: Record<number, number[]>;
+    // Map of charger ID -> array of project IDs containing it
+    chargerToProjects: Record<number, number[]>;
+}

@@ -47,7 +47,7 @@ function MapController({ selectedFeature, projects, chargers }: { selectedFeatur
 export default function MapView({ chargers, projects, selectedFeature, onSelectFeature }: MapViewProps) {
 
     const chargerStyle = {
-        radius: 6,
+        radius: 4,
         fillColor: "#10b981", // green-500
         color: "#fff",
         weight: 1,
