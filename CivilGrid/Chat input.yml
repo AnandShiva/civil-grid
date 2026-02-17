@@ -1,0 +1,28 @@
+info:
+  name: Chat input
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/chat
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "messages": [
+          { "role": "user", "content": "What time is it?" },
+          { "role": "assistant", "content": "I don't have access to real-time clocks, but your local time is..." },
+          { "role": "user", "content": "What about the date?" }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

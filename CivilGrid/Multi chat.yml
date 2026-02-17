@@ -1,0 +1,65 @@
+info:
+  name: Multi chat
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:3000/api/chat
+  headers:
+    - name: User-Agent
+      value: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:148.0) Gecko/20100101 Firefox/148.0
+    - name: Accept
+      value: "*/*"
+    - name: Accept-Language
+      value: en-US,en;q=0.9
+    - name: Accept-Encoding
+      value: gzip, deflate, br, zstd
+    - name: Referer
+      value: http://localhost:5173/
+    - name: Content-Type
+      value: application/json
+    - name: Origin
+      value: http://localhost:5173
+    - name: DNT
+      value: "1"
+    - name: Connection
+      value: keep-alive
+    - name: Sec-Fetch-Dest
+      value: empty
+    - name: Sec-Fetch-Mode
+      value: cors
+    - name: Sec-Fetch-Site
+      value: same-site
+    - name: Priority
+      value: u=0
+    - name: Pragma
+      value: no-cache
+    - name: Cache-Control
+      value: no-cache
+  body:
+    type: json
+    data: |-
+      {
+        "messages": [
+          {
+            "role": "user",
+            "content": "what is 1+1?"
+          },
+          {
+            "role": "assistant",
+            "content": "1 + 1 = 2\n"
+          },
+          {
+            "role": "user",
+            "content": "can you add one more to it? "
+          }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
