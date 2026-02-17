@@ -36,6 +36,9 @@ fastify.post("/api/chat", async (request, reply) => {
         reply.raw.end();
     } catch (error) {
         request.log.error(error);
+        if (!reply.raw.headersSent) {
+            reply.raw.removeHeader('Content-Type');
+        }
         reply.code(500).send({ error: "Internal Server Error" });
     }
 });
